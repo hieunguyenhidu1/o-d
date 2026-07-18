@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+server:
+  port: 80
+
+shedlock:
+  enabled: true
+
+app:
+  environment: PRODUCTION
+  url: http://localhost:80
+  name: MyAppProdYML  # Ghi đè app.name nếu profile = prod
+

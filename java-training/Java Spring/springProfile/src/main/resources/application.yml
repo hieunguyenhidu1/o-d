@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    active: prod   # Profile mặc định
+
+app:
+  description: This is from YAML

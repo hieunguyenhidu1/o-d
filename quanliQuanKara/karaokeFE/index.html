@@ -1,0 +1,151 @@
+    <!DOCTYPE html>
+    <html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Hệ Thống Quản Lý Karaoke</title>
+        <link rel="stylesheet" href="style.css"> 
+    </head>
+    <body>
+
+        <div class="app-container">
+            
+            <nav class="nav-sidebar">
+                <h1 class="logo">Karaoke Manager</h1>
+                <hr>
+                <div class="sidebar-menu">
+                    <button class="sidebar-btn" id="btn-room-mgmt" onclick="showContent('room-management')">
+                        🎤 Quản Lý Phòng
+                    </button>
+                    
+                    <h3 class="menu-heading">📊 BÁO CÁO & THỐNG KÊ</h3>
+                    
+                    <button class="sidebar-btn" id="btn-customer-report" onclick="showContent('customer-report')">
+                        🧑‍🤝‍🧑 Khách Hàng (Doanh thu)
+                    </button>
+                    <button class="sidebar-btn" id="btn-revenue-report" onclick="showContent('revenue-report')">
+                        💰 Doanh Thu theo Kỳ
+                    </button>
+
+                </div>
+            </nav>
+
+            <main class="content-area">
+                
+        
+                <section class="content-section" id="section-room-management">
+                    <h2>🎤 Quản Lý Danh Sách Phòng</h2>
+                    <div class="action-bar">
+                        <button onclick="addNewRoom()" class="primary-btn">➕ Thêm Phòng Mới</button>
+                    </div>
+                    <div id="roomTableContainer" style="margin-top: 15px;">
+                        </div>
+                </section>
+                
+                <section class="content-section" id="section-customer-report">
+                    <h2>🧑‍🤝‍🧑 Báo Cáo Top Khách Hàng (Doanh thu)</h2>
+                    <div id="customerReportContent">
+                        </div>
+                </section>
+
+                <section class="content-section" id="section-revenue-report">
+                    <h2>💰 Thống Kê Doanh Thu</h2>
+                    
+                    <div class="filter-bar">
+                        
+                        <label for="roomFilter">Phòng:</label>
+                        <select id="roomFilter" onchange="loadRevenueReport()">
+                            <option value="all" selected>Tất cả các phòng</option> 
+                        </select>
+
+                        <label for="periodType">Lọc theo:</label>
+                        <select id="periodType" onchange="updatePeriodFilters()">
+                            <option value="month" selected>Tháng</option>
+                            <option value="quarter">Quý</option>
+                            <option value="year">Năm</option>
+                        </select>
+                        
+                        <div id="dynamicPeriodFilters">
+                            </div>
+                        
+                    </div>
+                    
+                    <div id="revenueReportContent" style="margin-top: 20px;">
+                        <p style="color: gray;">Chọn kỳ và phòng để xem báo cáo.</p>
+                    </div>
+                </section>
+
+            </main>
+            
+        </div> <div id="editRoomModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal('editRoomModal')">&times;</span>
+                <h2>✏️ Chỉnh Sửa Thông Tin Phòng</h2>
+                
+                <form id="editRoomForm">
+                    <input type="hidden" id="edit-room-id">
+                    
+                    <label for="edit-room-name">Tên Phòng:</label>
+                    <input type="text" id="edit-room-name" required>
+
+                    <label for="edit-room-type">Loại Phòng:</label>
+                    <select id="edit-room-type" required>
+                        <option value="VIP">VIP</option>
+                        <option value="THUONG">Thường</option>
+                    </select>
+
+                    <label for="edit-price-per-hour">Giá/Giờ (VND):</label>
+                    <input type="number" id="edit-price-per-hour" required min="100000">
+
+                    <label for="edit-room-status">Trạng Thái:</label>
+                    <select id="edit-room-status" required>
+                        <option value="AVAILABLE">Sẵn Sàng (AVAILABLE)</option>
+                        <option value="OCCUPIED">Đang Hát (OCCUPIED)</option>
+                        <option value="CLEANING">Dọn Dẹp (CLEANING)</option>
+                    </select>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="primary-btn">Lưu Thay Đổi</button>
+                        <button type="button" class="secondary-btn" onclick="closeModal('editRoomModal')">Hủy</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="addRoomModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('addRoomModal')">&times;</span>
+            <h2>➕ Thêm Phòng Mới</h2>
+            
+            <form id="addRoomForm">
+                
+                <label for="add-room-name">Tên Phòng:</label>
+                <input type="text" id="add-room-name" required>
+
+                <label for="add-room-type">Loại Phòng:</label>
+                <select id="add-room-type" required>
+                    <option value="THUONG">Thường</option>
+                    <option value="VIP">VIP</option>
+                </select>
+
+                <label for="add-price-per-hour">Giá/Giờ (VND):</label>
+                <input type="number" id="add-price-per-hour" required min="100000" value="100000">
+
+                <label for="add-room-status">Trạng Thái Ban Đầu:</label>
+                <select id="add-room-status" required>
+                    <option value="AVAILABLE" selected>Sẵn Sàng (AVAILABLE)</option>
+                    <option value="CLEANING">Dọn Dẹp (CLEANING)</option>
+                </select>
+                
+                <div class="form-actions">
+                    <button type="submit" class="primary-btn">Tạo Phòng</button>
+                    <button type="button" class="secondary-btn" onclick="closeModal('addRoomModal')">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+        
+        <script src="app.js"></script> 
+
+    </body>
+    </html>

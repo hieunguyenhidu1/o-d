@@ -1,0 +1,13 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+server:
+  port: 8080
+
+app:
+  environment: DEV
+  url: http://localhost:8080
+  name: MyAppDevYML  # Ghi đè app.name nếu profile = dev
+
